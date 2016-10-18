@@ -53,7 +53,7 @@ class SignalProcess(RFSignal):
     def run(self, samples):
         # Dumb everything as one stream
         if self.dump_raw:
-            d.tofile(self.dump_raw)
+            samples.tofile(self.dump_raw)
             self.dump_raw.flush()
 
         self.process(samples)
@@ -62,10 +62,10 @@ class SignalProcess(RFSignal):
             self.analyze()
         self.demodulate()
                     
-    def callback(self, samples, rtl):
+    def callback(self, num_samples, rtl):
         try:
-            d = np.frombuffer(samples, dtype=np.uint8)
-            self.run(d)
+            samples = np.frombuffer(num_samples, dtype=np.uint8)
+            self.run(samples)
         except Exception as err:
             print("Error in callback!")
             print(err)
